@@ -15,9 +15,16 @@ const BookItemWrapper = styled.section`
   }
 `
 
-const BookItem = ({ authorName, bookTitle, bookSummary, children }) => {
+const BookItem = ({
+  bookCover,
+  bookTitle,
+  bookSummary,
+  authorName,
+  children,
+}) => {
   return (
     <BookItemWrapper>
+      <img src={bookCover} alt="Book Cover" />
       <h2>
         {bookTitle} <small>{authorName}</small>
       </h2>

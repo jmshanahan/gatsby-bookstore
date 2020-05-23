@@ -2,13 +2,14 @@ import React from "react"
 import Layout from "../components/layout"
 import BookItem from "../components/BookItem"
 
-const BookTemplate = ({ pageContext }) => {
+const BookTemplate = props => {
   return (
     <Layout>
       <BookItem
-        authorName={pageContext.author.name}
-        bookSummary={pageContext.summary}
-        bookTitle={pageContext.title}
+        bookCover={props.pageContext.imageUrl}
+        authorName={props.pageContext.author.name}
+        bookSummary={props.pageContext.summary}
+        bookTitle={props.pageContext.title}
       />
     </Layout>
   )

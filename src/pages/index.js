@@ -19,11 +19,11 @@ const LinkButton = styled.div`
   }
 `
 const IndexPage = props => {
-  console.log(props)
   return (
     <Layout>
       {props.data.allBook.edges.map(edge => (
         <BookItem
+          bookCover={edge.node.imageUrl}
           bookTitle={edge.node.title}
           bookSummary={edge.node.summary}
           authorName={edge.node.author.name}
@@ -47,6 +47,7 @@ export const query = graphql`
         node {
           summary
           title
+          imageUrl
           id
           author {
             name
