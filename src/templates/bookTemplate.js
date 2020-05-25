@@ -1,17 +1,38 @@
 import React from "react"
 import Layout from "../components/layout"
 import BookItem from "../components/BookItem"
+import { graphql } from "gatsby"
 
 const BookTemplate = props => {
   return (
     <Layout>
       <BookItem
-        bookCover={props.pageContext.imageUrl}
-        authorName={props.pageContext.author.name}
-        bookSummary={props.pageContext.summary}
-        bookTitle={props.pageContext.title}
+        bookCover={props.data.book.localImage.childImageSharp.fixed}
+        authorName={props.data.book.localImageauthor.name}
+        bookSummary={props.data.book.summary}
+        bookTitle={props.data.book.title}
       />
     </Layout>
   )
 }
+export const query = graphql`
+  query BookQuery($bookId: String) {
+    book(id: { eq: $bookId }) {
+      summary
+      title
+      localImage {
+        childImageSharp {
+          fixed(width: 200) {
+            ...GatsbyImageSharpFixed
+          }
+        }
+      }
+      id
+      author {
+        name
+      }
+    }
+  }
+`
+
 export default BookTemplate

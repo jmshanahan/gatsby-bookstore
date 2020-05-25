@@ -23,7 +23,7 @@ const IndexPage = props => {
     <Layout>
       {props.data.allBook.edges.map(edge => (
         <BookItem
-          bookCover={edge.node.imageUrl}
+          bookCover={edge.node.localImage.childImageSharp.fixed}
           bookTitle={edge.node.title}
           bookSummary={edge.node.summary}
           authorName={edge.node.author.name}
@@ -47,7 +47,13 @@ export const query = graphql`
         node {
           summary
           title
-          imageUrl
+          localImage {
+            childImageSharp {
+              fixed(width: 200) {
+                ...GatsbyImageSharpFixed
+              }
+            }
+          }
           id
           author {
             name
