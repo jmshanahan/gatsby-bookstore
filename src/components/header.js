@@ -1,35 +1,80 @@
-import { Link } from "gatsby"
+import { Link, navigate } from "gatsby"
 import PropTypes from "prop-types"
-import React from "react"
+import React, { useContext } from "react"
+import { FirebaseContext } from "./Firebase"
+import styled from "styled-components"
 
-const Header = ({ siteTitle }) => (
-  <header
-    style={{
-      background: `rebeccapurple`,
-      marginBottom: `1.45rem`,
-    }}
-  >
-    <div
-      style={{
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `1.45rem 1.0875rem`,
-      }}
-    >
-      <h1 style={{ margin: 0 }}>
-        <Link
-          to="/"
-          style={{
-            color: `white`,
-            textDecoration: `none`,
-          }}
-        >
-          {siteTitle}
-        </Link>
-      </h1>
-    </div>
-  </header>
-)
+const LogoutLink = styled.span`
+  &:hover {
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`
+const HeaderWrapper = styled.header`
+  background-color: rebeccapurple;
+  margin-bottom: 1.45rem;
+`
+const HeaderContent = styled.div`
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 1.45rem 1.0875rem;
+  display: flex;
+  > h1 {
+    margin: 0;
+    flex-grow: 1;
+    > a {
+      color: white;
+      text-decoration: none;
+    }
+  }
+  > div {
+    margin: auto 0;
+    color: white;
+  }
+`
+const UserInfo = styled.div`
+  text-align: right;
+`
+const LoginLink = styled.div`
+  margin: auto 0;
+  > a {
+    color: white;
+  }
+`
+
+const Header = ({ siteTitle }) => {
+  const { firebase, user } = useContext(FirebaseContext)
+  console.log(firebase, user)
+
+  function handleLogoutClick(e) {
+    firebase.logout().then(() => navigate(`/login`))
+  }
+  return (
+    <HeaderWrapper>
+      <HeaderContent style={{}}>
+        <h1>
+          <Link to="/">{siteTitle}</Link>
+        </h1>
+        <div>
+          {!!user && !!user.email && (
+            <UserInfo>
+              {user.email}
+              <div>
+                <LogoutLink onClick={handleLogoutClick}>Logout</LogoutLink>
+              </div>
+            </UserInfo>
+          )}
+          {(!user || !user.email) && (
+            <LoginLink>
+              <Link to="/login">Login</Link>
+            </LoginLink>
+          )}
+        </div>
+      </HeaderContent>
+    </HeaderWrapper>
+  )
+}
 
 Header.propTypes = {
   siteTitle: PropTypes.string,

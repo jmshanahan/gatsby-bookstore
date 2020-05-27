@@ -8,7 +8,7 @@ const BookTemplate = props => {
     <Layout>
       <BookItem
         bookCover={props.data.book.localImage.childImageSharp.fixed}
-        authorName={props.data.book.localImageauthor.name}
+        authorName={props.data.book.localImage.author.name}
         bookSummary={props.data.book.summary}
         bookTitle={props.data.book.title}
       />
