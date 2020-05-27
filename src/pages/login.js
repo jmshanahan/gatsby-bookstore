@@ -1,13 +1,12 @@
 // Gatsby supports TypeScript natively!
-import React, { useState } from "react"
-import { PageProps, Link } from "gatsby"
-import { useAuth } from "../components/Firebase"
-import Layout from "../components/layout"
-import SEO from "../components/seo"
-
+import React, { useState, useContext } from "react"
+import { FirebaseContext } from "../components/Firebase"
+import { Form } from "../components/common/Form"
+import { Input } from "../components/common/Input"
+import { Button } from "../components/common/Button"
 const Login = props => {
   const [formValues, setFormValues] = useState({ email: "", password: "" })
-  const { firebase } = useAuth()
+  const { firebase } = useContext(FirebaseContext)
   function handleSubmit(e) {
     e.preventDefault()
     firebase.login({ email: formValues.email, password: formValues.password })
@@ -21,25 +20,27 @@ const Login = props => {
   }
 
   return (
-    <Layout>
-      <form action="" onSubmit={handleSubmit}>
-        <input
+    <section>
+      <Form action="" onSubmit={handleSubmit}>
+        <Input
           name="email"
           onChange={handleInputChange}
           value={formValues.email}
           type="text"
           placeholder="email"
         />
-        <input
+        <Input
           name="password"
           onChange={handleInputChange}
           value={formValues.password}
           type="password"
           placeholder="password"
         />
-        <button type="submit">Login</button>
-      </form>
-    </Layout>
+        <Button block type="submit">
+          Login
+        </Button>
+      </Form>
+    </section>
   )
 }
 

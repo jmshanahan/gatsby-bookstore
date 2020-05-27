@@ -2,7 +2,6 @@ import React from "react"
 import { Link, graphql } from "gatsby"
 import BookItem from "../components/BookItem"
 
-import Layout from "../components/layout"
 import styled from "styled-components"
 
 const LinkButton = styled.div`
@@ -20,7 +19,7 @@ const LinkButton = styled.div`
 `
 const IndexPage = props => {
   return (
-    <Layout>
+    <section>
       {props.data.allBook.edges.map(edge => (
         <BookItem
           bookCover={edge.node.localImage.childImageSharp.fixed}
@@ -34,7 +33,7 @@ const IndexPage = props => {
           </LinkButton>
         </BookItem>
       ))}
-    </Layout>
+    </section>
   )
 }
 export const query = graphql`
