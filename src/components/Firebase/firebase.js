@@ -28,6 +28,15 @@ class Firebase {
       userId: newUser.user.uid,
     })
   }
+
+  async postComment({ text, bookId }) {
+    const postCommentCallable = this.functions.httpsCallable("postComment")
+    return postCommentCallable({
+      text,
+      bookId,
+    })
+  }
+
   subscribeToBookComments({ bookId, onSnapshot }) {
     const bookRef = this.db.collection("books").doc(bookId)
     return this.db
