@@ -17,55 +17,24 @@ function useAuth() {
 
       unsubscribe = firebaseInstance.auth.onAuthStateChanged(userResult => {
         if (userResult) {
-          firebaseInstance
-            .getUserProfile({
-              userId: userResult.uid,
-            })
-            .then(r => {
-              setUser({
-                ...userResult,
-                username: r.empty ? null : r.docs[0].id,
-              })
-            })
-          // get user custom claims
-          /*setLoading(true);
-                    Promise.all([
-                        firebaseInstance.getUserProfile({ userId: userResult.uid }),
-                        firebaseInstance.auth.currentUser.getIdTokenResult(true),
-                    ]).then((result) => {
-                        const publicProfileResult = result[0]
-                        const token = result[1]
-
-                        if (publicProfileResult.empty) {
-                            publicProfileUnsubscribe = firebaseInstance.db
-                              .collection("publicProfiles")
-                              .where("userId", "==", userResult.uid)
-                              .onSnapshot((snapshot) => {
-                                  const publicProfileDoc = snapshot.docs[0]
-                                  if (publicProfileDoc && publicProfileDoc.id) {
-                                      setUser({
-                                          ...userResult,
-                                          admin: token.claims.admin,
-                                          username: publicProfileDoc.id,
-                                      })
-                                  }
-
-                                  setLoading(false)
-                              })
-                        } else {
-                            const publicProfileDoc = publicProfileResult.docs[0]
-                            if (publicProfileDoc && publicProfileDoc.id) {
-                                setUser({
-                                    ...userResult,
-                                    admin: token.claims.admin,
-                                    username: publicProfileDoc.id,
-                                })
-                            }
-
-                            setLoading(false)
-                        }
-                    })*/
+          publicProfileUnsubscribe = firebaseInstance.getUserProfile({
+            userId: userResult.uid,
+            onSnapshot: r => {
+              firebaseInstance.auth.currentUser
+                .getIdTokenResult(true)
+                .then(token => {
+                  setUser({
+                    ...userResult,
+                    isAdmin: token.claims.admin,
+                    username: r.empty ? null : r.docs[0].id,
+                  })
+                })
+            },
+          })
         } else {
+          if (publicProfileUnsubscribe) {
+            publicProfileUnsubscribe()
+          }
           setUser(null)
         }
 
@@ -76,10 +45,6 @@ function useAuth() {
     return () => {
       if (unsubscribe) {
         unsubscribe()
-      }
-
-      if (publicProfileUnsubscribe) {
-        publicProfileUnsubscribe()
       }
     }
   }, [])

@@ -12,15 +12,20 @@ class Firebase {
       this.storage = app.storage()
     }
   }
-  async getUserProfile({ userId }) {
+  getUserProfile({ userId, onSnapshot }) {
     return this.db
       .collection("publicProfiles")
       .where("userId", "==", userId)
-      .get()
+      .limit(1)
+      .onSnapshot(onSnapshot)
   }
 
-  async register({ email, password }) {
-    return this.auth.createUserWithEmailAndPassword(email, password)
+  async register({ email, password, username }) {
+    await this.auth.createUserWithEmailAndPassword(email, password)
+    const createPublicProfile = this.functions.httpsCallable(
+      "createPublicProfile"
+    )
+    return createPublicProfile({ username })
   }
 
   async postComment({ text, bookId }) {
